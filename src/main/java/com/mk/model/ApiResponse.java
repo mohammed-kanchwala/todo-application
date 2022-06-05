@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ApiResponse {
 
+    @Builder.Default
     private LocalDateTime responseTime = LocalDateTime.now();
     private Object message;
     private ErrorInfo error;
