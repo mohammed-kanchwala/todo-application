@@ -43,12 +43,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/user/registration").permitAll()
-                .antMatchers("/user/login*").permitAll()
-                .anyRequest().authenticated()
-                .antMatchers(HttpMethod.POST, "/api/todo/list/{listName}")
-                .access("@userSecurity.hasListAccess(authentication,#listName)")
-
+          .antMatchers("/user/registration", "/user/login*")
+          .permitAll()
+          .antMatchers(HttpMethod.POST, "/api/todo/list/{listName}")
+          .access("@userSecurity.hasListAccess(authentication,#listName)")
         ;
         http.cors().disable();
         http.csrf().disable();

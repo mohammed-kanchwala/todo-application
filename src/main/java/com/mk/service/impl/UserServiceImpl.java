@@ -30,5 +30,6 @@ public class UserServiceImpl implements UserService {
         Set<Role> roleSet = new HashSet<>();
         roleSet.add(role);
         userEntity.setRoles(roleSet);
+        userRepository.save(userEntity);
     }
 }

@@ -13,7 +13,7 @@
     <artifactId>todo-application</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>To Do Application</name>
-    <description>A Simple To Do Application</description>
+    <description>M.K's Simple To Do Application</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
