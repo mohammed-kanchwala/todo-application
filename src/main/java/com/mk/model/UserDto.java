@@ -1,8 +1,6 @@
 package com.mk.model;
 
-import com.mk.entity.RoleDto;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Set;

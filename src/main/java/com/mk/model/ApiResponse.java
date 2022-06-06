@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Builder
-public class ApiResponse {
+public class ApiResponse<T> {
 
     @Builder.Default
     private LocalDateTime responseTime = LocalDateTime.now();
-    private Object message;
+    private T message;
     private ErrorInfo error;
 }

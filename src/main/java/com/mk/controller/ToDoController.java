@@ -1,5 +1,6 @@
 package com.mk.controller;
 
+import com.mk.constants.UrlConstants;
 import com.mk.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.security.Principal;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api/todo")
+@RequestMapping(value = UrlConstants.API_URL + UrlConstants.TODO_URL)
 public class ToDoController {
 
     @Autowired
@@ -25,13 +26,13 @@ public class ToDoController {
 
     }
 
-    @GetMapping(value = "/list")
+    @GetMapping(value = UrlConstants.LIST)
     public ResponseEntity<?> getList(@AuthenticationPrincipal Principal principal) {
         return ok(toDoService.findAllList());
     }
 
     @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
-    @PostMapping(value = "/list/{listName}")
+    @PostMapping(value = UrlConstants.LIST + "/{listName}")
     public ResponseEntity<?> getList(@PathVariable("listName") String listName, Authentication authentication) {
         return ok(toDoService.findAllList());
     }

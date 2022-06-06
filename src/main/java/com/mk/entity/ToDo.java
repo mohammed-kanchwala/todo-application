@@ -1,14 +1,15 @@
 package com.mk.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "TO_DO")
-@Data
+@Getter
+@Setter
 public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
