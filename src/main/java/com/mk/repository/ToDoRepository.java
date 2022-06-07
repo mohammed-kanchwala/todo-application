@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface ToDoRepository extends CrudRepository<ToDo, Long> {
 
-  List<ToDoDto> findAllByListId(Long listId);
+  List<ToDo> findAllByListId(Long listId);
+
+  ToDo findByTitle(String title);
 }

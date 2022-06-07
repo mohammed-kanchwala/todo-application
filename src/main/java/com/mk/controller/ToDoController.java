@@ -26,15 +26,15 @@ public class ToDoController {
         return ok(ApiResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Welcome to the M.K's Simple To-Do Application APIs !!")
-          .build());
+                .build());
     }
 
     @GetMapping(value = UrlConstants.LIST)
     public ResponseEntity<ApiResponse<?>> getList() {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .message(toDoService.findAllList())
-          .build());
+                .status(HttpStatus.OK)
+                .message(toDoService.findAllList())
+                .build());
     }
 
     @PostMapping(value = UrlConstants.LIST + "/{listName}")
@@ -69,11 +69,23 @@ public class ToDoController {
                 .build());
     }
 
+
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
+    @GetMapping(value = UrlConstants.LIST + "/{listId}" + "/task")
+    public ResponseEntity<ApiResponse<?>> getAllTask(@PathVariable Long listId,
+                                                     Authentication authentication) throws ServiceException {
+        return ok(ApiResponse.builder()
+                .status(HttpStatus.OK)
+                .messages(toDoService.getAllTask(listId))
+                .message("Task added successfully !!")
+                .build());
+    }
+
     @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
     @PostMapping(value = UrlConstants.LIST + "/{listId}" + "/task")
     public ResponseEntity<ApiResponse<?>> addTask(@PathVariable Long listId,
                                                   @RequestBody ToDoDto todoTask,
-                                                  Authentication authentication) {
+                                                  Authentication authentication) throws ServiceException {
         return ok(ApiResponse.builder()
                 .status(HttpStatus.OK)
                 .messages(toDoService.addTask(listId, todoTask))
@@ -82,11 +94,11 @@ public class ToDoController {
     }
 
     @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
-    @PutMapping(value = UrlConstants.LIST + "/{listId}" + "/task")
-    public ResponseEntity<ApiResponse<?>> updateTask(@PathVariable Long listId, @RequestBody ToDoDto todoTask) {
+    @PutMapping(value = UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}")
+    public ResponseEntity<ApiResponse<?>> updateTask(@PathVariable Long listId, @PathVariable Long taskId, @RequestBody ToDoDto todoTask) throws ServiceException {
         return ok(ApiResponse.builder()
                 .status(HttpStatus.OK)
-                .messages(toDoService.updateTask(listId, todoTask))
+                .messages(toDoService.updateTask(listId, taskId, todoTask))
                 .message("Task updated successfully !!")
                 .build());
     }

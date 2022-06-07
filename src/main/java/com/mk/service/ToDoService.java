@@ -9,18 +9,20 @@ import java.util.List;
 
 public interface ToDoService {
 
-  List<RoleDto> findAllList();
+    List<RoleDto> findAllList();
 
-  List<RoleDto> createList(Authentication authentication, String listName)
-    throws ServiceException;
+    List<RoleDto> createList(Authentication authentication, String listName)
+            throws ServiceException;
 
-  List<RoleDto> updateList(Authentication authentication, Long id, String listName);
+    List<RoleDto> updateList(Authentication authentication, Long id, String listName);
 
-  List<RoleDto> deleteList(Authentication authentication, Long listId);
+    List<RoleDto> deleteList(Authentication authentication, Long listId);
 
-  List<ToDoDto> addTask(Long listId, ToDoDto todoTask);
+    List<ToDoDto> getAllTask(Long listId);
 
-  List<ToDoDto> updateTask(Long listId, ToDoDto todoTask);
+    List<ToDoDto> addTask(Long listId, ToDoDto todoTask) throws ServiceException;
 
-  List<ToDoDto> deleteTask(Long listId, Long id);
+    List<ToDoDto> updateTask(Long listId, Long taskId, ToDoDto todoTask) throws ServiceException;
+
+    List<ToDoDto> deleteTask(Long listId, Long id);
 }

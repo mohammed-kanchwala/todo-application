@@ -13,28 +13,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ToDoExceptionHandler {
 
-  @ExceptionHandler(Exception.class)
-  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-  public Object handleException(Exception exception) {
-    log.error("Something went wrong: ", exception);
-    return ApiResponse.builder()
-      .error(ErrorInfo.builder()
-        .code(ErrorConstants.SERVICE_EXCEPTION)
-        .message(ErrorConstants.SERVICE_EXCEPTION_MESSAGE)
-        .build())
-      .build();
-  }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public Object handleException(Exception exception) {
+        log.error("Something went wrong: ", exception);
+        return ApiResponse.builder()
+                .error(ErrorInfo.builder()
+                        .code(ErrorConstants.SERVICE_EXCEPTION)
+                        .message(ErrorConstants.SERVICE_EXCEPTION_MESSAGE)
+                        .build())
+                .build();
+    }
 
-  @ExceptionHandler({ServiceException.class})
-  @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-  public Object handleCustomException(ServiceException ex) {
-    log.error("ApiException thrown: ", ex);
-    return ApiResponse.builder()
-      .error(ErrorInfo.builder()
-        .code(ex.getErrorCode())
-        .message(ex.getErrorMessage())
-        .build())
-      .build();
-  }
+    @ExceptionHandler({ServiceException.class, IllegalArgumentException.class})
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public Object handleCustomException(ServiceException ex) {
+        log.error("ApiException thrown: ", ex);
+        return ApiResponse.builder()
+                .error(ErrorInfo.builder()
+                        .code(ex.getErrorCode())
+                        .message(ex.getErrorMessage())
+                        .build())
+                .build();
+    }
 
 }

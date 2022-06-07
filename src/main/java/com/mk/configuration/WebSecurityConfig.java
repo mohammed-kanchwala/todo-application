@@ -1,9 +1,9 @@
 package com.mk.configuration;
 
-import com.mk.configuration.swagger.SwaggerConfig;
 import com.mk.constants.UrlConstants;
 import com.mk.constants.swagger.SwaggerConstants;
 import com.mk.filter.JwtRequestFilter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,15 +49,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    @Bean
+    ModelMapper createModelMapper() {
+        return new ModelMapper();
+    }
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(
-                  UrlConstants.API_URL + UrlConstants.USER_URL + UrlConstants.REGISTER,
-                  UrlConstants.API_URL +UrlConstants.USER_URL + UrlConstants.AUTHENTICATE,
-                  SwaggerConstants.SWAGGER_HTML_UI,
-                  "/h2-console")
+                        UrlConstants.API_URL + UrlConstants.USER_URL + UrlConstants.REGISTER,
+                        UrlConstants.API_URL + UrlConstants.USER_URL + UrlConstants.AUTHENTICATE,
+                        SwaggerConstants.SWAGGER_HTML_UI,
+                        "/h2-console")
                 .permitAll().
                 anyRequest().authenticated().and().
                 exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
