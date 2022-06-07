@@ -46,7 +46,7 @@ public class ToDoServiceImpl implements ToDoService {
           .map(Role::getName)
           .collect(Collectors.toList())
           .stream()
-          .filter(s -> s.equalsIgnoreCase("USER"))
+          .filter(s -> !s.equalsIgnoreCase("USER"))
           .collect(Collectors.toList());
     }
 
