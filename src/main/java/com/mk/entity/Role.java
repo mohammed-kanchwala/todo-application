@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -22,5 +23,5 @@ public class Role {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private Set<User> users = new HashSet<>();
     @OneToMany(mappedBy = "listName")
-    private ToDo task;
+    private List<ToDo> task;
 }

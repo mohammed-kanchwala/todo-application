@@ -1,6 +1,8 @@
 package com.mk.configuration;
 
+import com.mk.configuration.swagger.SwaggerConfig;
 import com.mk.constants.UrlConstants;
+import com.mk.constants.swagger.SwaggerConstants;
 import com.mk.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                   UrlConstants.API_URL + UrlConstants.USER_URL + UrlConstants.REGISTER,
                   UrlConstants.API_URL +UrlConstants.USER_URL + UrlConstants.AUTHENTICATE,
+                  SwaggerConstants.SWAGGER_HTML_UI,
                   "/h2-console")
                 .permitAll().
                 anyRequest().authenticated().and().

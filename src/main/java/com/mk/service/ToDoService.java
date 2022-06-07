@@ -1,5 +1,6 @@
 package com.mk.service;
 
+import com.mk.exception.ServiceException;
 import com.mk.model.ToDoDto;
 import org.springframework.security.core.Authentication;
 
@@ -9,11 +10,12 @@ public interface ToDoService {
 
   List<String> findAllList();
 
-  String createList(Authentication authentication, String listName);
+  List<String> createList(Authentication authentication, String listName)
+    throws ServiceException;
 
-  String updateList(Authentication authentication, Long id, String listName);
+  List<String> updateList(Authentication authentication, Long id, String listName);
 
-  String deleteList(Authentication authentication, Long listName);
+  List<String> deleteList(Authentication authentication, Long listName);
 
   List<ToDoDto> addTask(String listName, ToDoDto todoTask);
 
