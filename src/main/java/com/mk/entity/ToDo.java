@@ -20,5 +20,5 @@ public class ToDo {
     private LocalDateTime completedDate;
     @ManyToOne
     @JoinColumn(name = "list_name_id")
-    private Role listName;
+    private Role list;
 }

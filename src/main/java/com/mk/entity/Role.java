@@ -22,6 +22,6 @@ public class Role {
     private String name;
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles")
     private Set<User> users = new HashSet<>();
-    @OneToMany(mappedBy = "listName")
+    @OneToMany(mappedBy = "list")
     private List<ToDo> task;
 }

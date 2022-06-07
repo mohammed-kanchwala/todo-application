@@ -27,5 +27,15 @@ public class UserSecurity {
         }
         return false;
     }
+
+    public boolean hasListAccess(Authentication authentication, Long listId) {
+        Optional<User> user = userRepository.findByEmail(authentication.getName());
+        if (user.isPresent()) {
+            Set<Role> roles = user.get().getRoles();
+            List<Long> list = roles.stream().map(Role::getId).collect(Collectors.toList());
+            return list.contains(listId);
+        }
+        return false;
+    }
 }
 

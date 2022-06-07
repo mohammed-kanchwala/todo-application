@@ -1,6 +1,7 @@
 package com.mk.service;
 
 import com.mk.exception.ServiceException;
+import com.mk.model.RoleDto;
 import com.mk.model.ToDoDto;
 import org.springframework.security.core.Authentication;
 
@@ -8,18 +9,18 @@ import java.util.List;
 
 public interface ToDoService {
 
-  List<String> findAllList();
+  List<RoleDto> findAllList();
 
-  List<String> createList(Authentication authentication, String listName)
+  List<RoleDto> createList(Authentication authentication, String listName)
     throws ServiceException;
 
-  List<String> updateList(Authentication authentication, Long id, String listName);
+  List<RoleDto> updateList(Authentication authentication, Long id, String listName);
 
-  List<String> deleteList(Authentication authentication, Long listName);
+  List<RoleDto> deleteList(Authentication authentication, Long listId);
 
-  List<ToDoDto> addTask(String listName, ToDoDto todoTask);
+  List<ToDoDto> addTask(Long listId, ToDoDto todoTask);
 
-  List<ToDoDto> updateTask(String listName, ToDoDto todoTask);
+  List<ToDoDto> updateTask(Long listId, ToDoDto todoTask);
 
-  List<ToDoDto> deleteTask(String listName, Long id);
+  List<ToDoDto> deleteTask(Long listId, Long id);
 }

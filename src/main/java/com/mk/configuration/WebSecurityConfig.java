@@ -65,8 +65,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-    /*                .antMatchers(HttpMethod.POST, "/api/todo/list/{listName}")
-                .access("@userSecurity.hasListAccess(authentication,#listName)")*/
-
 }

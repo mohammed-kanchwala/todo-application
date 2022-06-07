@@ -10,15 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -32,8 +24,8 @@ public class ToDoController {
     @GetMapping(value = "/")
     public ResponseEntity<ApiResponse<?>> get() {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .message("Welcome to the M.K's Simple To-Do Application !!")
+                .status(HttpStatus.OK)
+                .message("Welcome to the M.K's Simple To-Do Application APIs !!")
           .build());
     }
 
@@ -46,80 +38,69 @@ public class ToDoController {
     }
 
     @PostMapping(value = UrlConstants.LIST + "/{listName}")
-    public ResponseEntity<ApiResponse<?>> createList(@PathVariable(
-      "listName"
-    ) String listName, Authentication authentication) throws ServiceException {
+    public ResponseEntity<ApiResponse<?>> createList(@PathVariable String listName, Authentication authentication) throws ServiceException {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.createList(authentication, listName))
-          .message("List Created successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.createList(authentication, listName))
+                .message("List Created successfully !!")
+                .build());
     }
 
-    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
-    @PutMapping(value = UrlConstants.LIST + "/{id}")
-    public ResponseEntity<ApiResponse<?>> updateList(@PathVariable(
-      "id"
-    ) Long id,
-      @RequestParam("listName") String listName,
-      Authentication authentication) {
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
+    @PutMapping(value = UrlConstants.LIST + "/{listId}")
+    public ResponseEntity<ApiResponse<?>> updateList(
+            @PathVariable Long listId,
+            @RequestParam("listName") String listName,
+            Authentication authentication) {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.updateList(authentication, id, listName))
-          .message("List Name updated successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.updateList(authentication, listId, listName))
+                .message("List Name updated successfully !!")
+                .build());
     }
 
-    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
-    @DeleteMapping(value = UrlConstants.LIST + "/{id}")
-    public ResponseEntity<ApiResponse<?>> deleteList(@PathVariable(
-      "id"
-    ) Long id, Authentication authentication) {
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
+    @DeleteMapping(value = UrlConstants.LIST + "/{listId}")
+    public ResponseEntity<ApiResponse<?>> deleteList(@PathVariable Long listId, Authentication authentication) {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.deleteList(authentication, id))
-          .message("List Deleted successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.deleteList(authentication, listId))
+                .message("List Deleted successfully !!")
+                .build());
     }
 
-    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
-    @PostMapping(value = UrlConstants.LIST + "/{listName}" + "/task")
-    public ResponseEntity<ApiResponse<?>> addTask(@PathVariable(
-      "listName"
-    ) String listName,
-      @RequestBody ToDoDto todoTask,
-      Authentication authentication) {
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
+    @PostMapping(value = UrlConstants.LIST + "/{listId}" + "/task")
+    public ResponseEntity<ApiResponse<?>> addTask(@PathVariable Long listId,
+                                                  @RequestBody ToDoDto todoTask,
+                                                  Authentication authentication) {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.addTask(listName, todoTask))
-          .message("Task added successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.addTask(listId, todoTask))
+                .message("Task added successfully !!")
+                .build());
     }
 
-    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
-    @PutMapping(value = UrlConstants.LIST + "/{listName}" + "/task")
-    public ResponseEntity<ApiResponse<?>> updateTask(@PathVariable(
-      "listName"
-    ) String listName, @RequestBody ToDoDto todoTask) {
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
+    @PutMapping(value = UrlConstants.LIST + "/{listId}" + "/task")
+    public ResponseEntity<ApiResponse<?>> updateTask(@PathVariable Long listId, @RequestBody ToDoDto todoTask) {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.updateTask(listName, todoTask))
-          .message("Task updated successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.updateTask(listId, todoTask))
+                .message("Task updated successfully !!")
+                .build());
     }
 
-    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listName)")
+    @PreAuthorize("@userSecurity.hasListAccess(authentication,#listId)")
     @DeleteMapping(
-      value = UrlConstants.LIST + "/{listName}" + "/task" + "/{id}"
+            value = UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}"
     )
-    public ResponseEntity<ApiResponse<?>> deleteTask(@PathVariable(
-      "listName"
-    ) String listName, @PathVariable("id") Long id) {
+    public ResponseEntity<ApiResponse<?>> deleteTask(@PathVariable Long listId, @PathVariable Long taskId) {
         return ok(ApiResponse.builder()
-          .status(HttpStatus.OK)
-          .messages(toDoService.deleteTask(listName, id))
-          .message("Task deleted successfully !!")
-          .build());
+                .status(HttpStatus.OK)
+                .messages(toDoService.deleteTask(listId, taskId))
+                .message("Task deleted successfully !!")
+                .build());
     }
 
 }

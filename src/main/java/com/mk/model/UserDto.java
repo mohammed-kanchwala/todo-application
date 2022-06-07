@@ -1,16 +1,18 @@
 package com.mk.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 public class UserDto implements Serializable {
-    private final Long id;
-    private final String email;
-    private final String password;
-    private final String firstName;
-    private final String lastName;
-    private final Set<RoleDto> roles;
+    private Long id;
+    private String email;
+    private String password;
+    private String firstName;
+    private String lastName;
+    private Set<RoleDto> roles;
 }

@@ -1,85 +1,276 @@
 {
 	"info": {
-		"_postman_id": "9f50a3cb-1858-4ce9-bf3b-06739e5f8c32",
+		"_postman_id": "f49eef81-f150-4024-a745-38bc30b2d04a",
 		"name": "to-do application",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1605751"
 	},
 	"item": [
 		{
-			"name": "register",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"Test123\",\r\n    \"firstName\":\"Test\",\r\n    \"lastName\":\"User\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "list",
+			"item": [
+				{
+					"name": "get all list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/todo/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"todo",
+								"list"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8084/api/user/register",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8084",
-					"path": [
-						"api",
-						"user",
-						"register"
-					]
+				{
+					"name": "create list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/todo/list/test",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"todo",
+								"list",
+								"test"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/todo/list/2?listName=update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"todo",
+								"list",
+								"2"
+							],
+							"query": [
+								{
+									"key": "listName",
+									"value": "update"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/todo/list/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"todo",
+								"list",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "login",
-			"event": [
+			"name": "user",
+			"item": [
 				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"Set Token\", function() {\r",
-							"    var jsonData = pm.response.json();\r",
-							"    if(jsonData.jwtToken) {\r",
-							"        pm.globals.set(\"token\", jsonData.jwtToken);\r",
-							"    }\r",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"Test123\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"Test123\",\r\n    \"firstName\":\"Test\",\r\n    \"lastName\":\"User\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"user",
+								"register"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:8084/api/user/authenticate",
-					"protocol": "http",
-					"host": [
-						"localhost"
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Token\", function() {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    if(jsonData.jwtToken) {\r",
+									"        pm.globals.set(\"token\", jsonData.jwtToken);\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
 					],
-					"port": "8084",
-					"path": [
-						"api",
-						"user",
-						"authenticate"
-					]
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"test@test.com\",\r\n    \"password\":\"Test123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/user/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"user",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "task",
+			"item": [
+				{
+					"name": "create task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"task 1\",\r\n    \"isDone\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/todo/list/2/task",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"todo",
+								"list",
+								"2",
+								"task"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		},
 		{
 			"name": "home",
@@ -107,69 +298,6 @@
 						"api",
 						"todo",
 						""
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "get all list",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8084/api/todo/list",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8084",
-					"path": [
-						"api",
-						"todo",
-						"list"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "create list",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:8084/api/todo/list/test",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8084",
-					"path": [
-						"api",
-						"todo",
-						"list",
-						"test"
 					]
 				}
 			},
