@@ -18,4 +18,7 @@ public class ToDo {
     private String title;
     private Boolean isDone;
     private LocalDateTime completedDate;
+    @ManyToOne
+    @JoinColumn(name = "list_name_id")
+    private Role listName;
 }

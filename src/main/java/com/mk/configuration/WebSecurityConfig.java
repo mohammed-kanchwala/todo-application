@@ -51,8 +51,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(UrlConstants.USER_URL + UrlConstants.REGISTER,
-                        UrlConstants.USER_URL + UrlConstants.AUTHENTICATE, "/h2-console")
+                .antMatchers(
+                  UrlConstants.API_URL + UrlConstants.USER_URL + UrlConstants.REGISTER,
+                  UrlConstants.API_URL +UrlConstants.USER_URL + UrlConstants.AUTHENTICATE,
+                  "/h2-console")
                 .permitAll().
                 anyRequest().authenticated().and().
                 exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
