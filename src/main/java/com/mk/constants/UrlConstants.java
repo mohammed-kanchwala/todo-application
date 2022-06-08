@@ -12,4 +12,5 @@ public class UrlConstants {
     public static final String REGISTER = "/register";
     public static final String AUTHENTICATE = "/authenticate";
     public static final String LIST = "/list";
+    public static final String HTTP_LOCALHOST = "http://localhost:";
 }

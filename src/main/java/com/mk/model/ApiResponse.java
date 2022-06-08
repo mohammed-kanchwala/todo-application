@@ -1,6 +1,7 @@
 package com.mk.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class ApiResponse<T> {
 
     private HttpStatus status;
     @Builder.Default
+    @JsonSerialize()
     private LocalDateTime responseTime = LocalDateTime.now();
     private T messages;
     private T message;

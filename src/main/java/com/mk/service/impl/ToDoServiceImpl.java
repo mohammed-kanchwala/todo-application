@@ -48,8 +48,7 @@ public class ToDoServiceImpl implements ToDoService {
 
     private List<RoleDto> getAllListNames() {
         List<Role> list = StreamSupport.stream(roleRepository.findAll().spliterator(), false).collect(Collectors.toList()).stream().filter(r -> !r.getName().equalsIgnoreCase("USER")).collect(Collectors.toList());
-        return mapper.map(list, new TypeToken<List<RoleDto>>() {
-        }.getType());
+        return mapper.map(list, new TypeToken<List<RoleDto>>() {}.getType());
     }
 
     @Override
