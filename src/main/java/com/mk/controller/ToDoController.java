@@ -33,7 +33,7 @@ public class ToDoController {
     public ResponseEntity<ApiResponse<?>> getList() {
         return ok(ApiResponse.builder()
                 .status(HttpStatus.OK)
-                .message(toDoService.findAllList())
+                .messages(toDoService.findAllList())
                 .build());
     }
 
@@ -50,7 +50,7 @@ public class ToDoController {
     @PutMapping(value = UrlConstants.LIST + "/{listId}")
     public ResponseEntity<ApiResponse<?>> updateList(
             @PathVariable Long listId,
-            @RequestParam("listName") String listName,
+            @RequestParam String listName,
             Authentication authentication) {
         return ok(ApiResponse.builder()
                 .status(HttpStatus.OK)

@@ -23,9 +23,9 @@ public class RequestUtil {
         return userDto;
     }
 
-    public static HttpHeaders getHeaders(String token) {
+    public static HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
+        headers.setBearerAuth(TestUtility.token);
         return headers;
     }
 
