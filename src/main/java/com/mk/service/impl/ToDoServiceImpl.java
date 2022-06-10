@@ -19,11 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -104,16 +102,19 @@ public class ToDoServiceImpl implements ToDoService {
 
   @Override
   public List<ListDto> deleteList(Authentication authentication, Long listId) {
-    Optional<TodoLists> optionalRole = listRepository.findById(listId);
-    optionalRole.ifPresent(role -> {
+    Optional<TodoLists> optionalList = listRepository.findById(listId);
+    optionalList.ifPresent(list -> {
       Optional<User> optionalUser = userRepository.findByEmail(
         authentication.getName());
       optionalUser.ifPresent(user -> {
         Set<TodoLists> todoLists = user.getTodoLists();
-        todoLists.remove(role);
+        todoLists.remove(list);
         user.setTodoLists(todoLists);
         userRepository.save(user);
-        listRepository.delete(role);
+        List<ToDo> toDos = toDoRepository.findAllByListId(listId);
+        toDoRepository.deleteAll(toDos);
+        list.setTask(null);
+        listRepository.delete(list);
       });
     });
     return getAllListNames();
@@ -150,9 +151,7 @@ public class ToDoServiceImpl implements ToDoService {
         .code(HttpStatus.BAD_REQUEST.name())
         .message("No task found to update !!")
         .build()));
-    task.setTitle(todoTask.getTitle());
-    task.setCompletedDate(todoTask.getCompletedDate());
-    task.setIsDone(todoTask.getIsDone());
+    BeanUtils.copyProperties(todoTask, task, "id");
     toDoRepository.save(task);
     return MapperUtil.mapAll(toDoRepository.findAllByListId(listId),
       ToDoDto.class);

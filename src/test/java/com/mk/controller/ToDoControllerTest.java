@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("rawtypes")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ToDoControllerTest extends UserControllerTest {
 
@@ -48,6 +49,7 @@ class ToDoControllerTest extends UserControllerTest {
     private int port;
 
     private static Long listId;
+    private static Long taskId;
 
     @Test
     @Order(1)
@@ -96,8 +98,8 @@ class ToDoControllerTest extends UserControllerTest {
     }
 
     @Test
-    @Order(5)
-    @DisplayName("Create TodoLists")
+    @Order(6)
+    @DisplayName("Create Todo List")
     void createList() {
       String url = TestUtility.createToDoURL(port,
         UrlConstants.LIST + "/{listName}");
@@ -120,14 +122,13 @@ class ToDoControllerTest extends UserControllerTest {
       assertNotNull(apiResponse.getMessages());
       List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
 
-
       assertEquals(1, listDtoList.size());
     }
 
 
   @Test
-  @Order(6)
-  @DisplayName("Get All TodoLists With Newly Created TodoLists")
+  @Order(7)
+  @DisplayName("Get All Todo List Including Newly Created")
   void getList_AfterCreation() {
     URI uri = UriComponentsBuilder.fromHttpUrl(
       TestUtility.createToDoURL(port, UrlConstants.LIST)).build().toUri();
@@ -154,8 +155,8 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(7)
-  @DisplayName("Update TodoLists Name")
+  @Order(8)
+  @DisplayName("Update List Name")
     void updateList() {
     String url = TestUtility.createToDoURL(port,
       UrlConstants.LIST + "/{listId}");
@@ -184,8 +185,8 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(8)
-  @DisplayName("Update TodoLists Name with Invalid Id")
+  @Order(9)
+  @DisplayName("Update List Name with Invalid Id")
     void updateList_WithInvalidId() {
     String url = TestUtility.createToDoURL(port,
       UrlConstants.LIST + "/{listId}");
@@ -214,7 +215,8 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(9)
+  @Order(10)
+  @DisplayName("Get All the Tasks for an Empty List")
   void getAllTask() {
     String url = TestUtility.createToDoURL(port,
       UrlConstants.LIST + "/{listId}" + "/task");
@@ -240,20 +242,147 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
+  @Order(11)
+  @DisplayName("Add a new Task And Verify Updated List")
   void addTask() {
-  }
+    String url = TestUtility.createToDoURL(port,
+            UrlConstants.LIST + "/{listId}" + "/task");
+    Map<String, Object> params = new HashMap<>();
+    params.put("listId", listId);
 
-  @Test
-  void updateTask() {
-  }
+    URI uri = UriComponentsBuilder.fromUriString(url)
+            .uriVariables(params)
+            .build()
+            .toUri();
+    ToDoDto toDoDto = RequestUtil.createToDo("New Task", false);
+    HttpEntity<ToDoDto> request = new HttpEntity<>(toDoDto,
+            RequestUtil.getHeaders());
 
-  @Test
-  void deleteTask() {
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+            HttpMethod.POST, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getMessages());
+    List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
+            new TypeToken<List<ToDoDto>>() {}.getType());
+    assertEquals(1, toDoDtoList.size());
+    Optional<ToDoDto> matchingDto =
+            toDoDtoList.stream().filter(t -> t.getTitle().equals(toDoDto.getTitle())).findFirst();
+    matchingDto.ifPresent(t -> taskId = t.getId());
   }
 
   @Test
   @Order(12)
-  @DisplayName("Delete TodoLists")
+  @DisplayName("Update Task with Valid Id")
+  void updateTask() {
+    ResponseEntity<ApiResponse> response = updateTaskTest(listId, taskId,
+            RequestUtil.createToDo("Update Task", true));
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getMessages());
+    List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
+            new TypeToken<List<ToDoDto>>() {}.getType());
+    Optional<ToDoDto> optionalToDo =
+            toDoDtoList.stream().filter(t -> t.getTitle().equals("Update Task")).findFirst();
+    assertTrue(optionalToDo.isPresent());
+  }
+
+
+  @Test
+  @Order(13)
+  @DisplayName("Update Task with InValid Task Id")
+  void updateTask_WithInvalidTaskId() {
+    ResponseEntity<ApiResponse> response = updateTaskTest(listId, 0L,
+            RequestUtil.createToDo("Update Task", true));
+
+    assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getError());
+    ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
+            ErrorInfo.class);
+    assertEquals(HttpStatus.BAD_REQUEST.name(), errorInfo.getCode());
+  }
+
+  @Test
+  @Order(14)
+  @DisplayName("Update Task with InValid List Id")
+  void updateTask_WithInvalidListId() {
+    ResponseEntity<ApiResponse> response = updateTaskTest(0L, taskId, RequestUtil.createToDo("Update Task", true));
+
+    assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getError());
+    ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
+            ErrorInfo.class);
+    assertEquals(ErrorConstants.ACCESS_DENIED, errorInfo.getCode());
+    assertEquals(ErrorConstants.ACCESS_DENIED_MESSAGE, errorInfo.getMessage());
+  }
+
+  private ResponseEntity<ApiResponse> updateTaskTest(Long listId, Long taskId, ToDoDto update_task) {
+    String url = TestUtility.createToDoURL(port,
+            UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}");
+    Map<String, Object> params = new HashMap<>();
+    params.put("listId", listId);
+    params.put("taskId", taskId);
+
+    URI uri = UriComponentsBuilder.fromUriString(url)
+            .uriVariables(params)
+            .build()
+            .toUri();
+    HttpEntity<ToDoDto> request = new HttpEntity<>(RequestUtil.createToDo(
+            "Update Task", true),
+            RequestUtil.getHeaders());
+
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+            HttpMethod.PUT, request, ApiResponse.class);
+    return response;
+  }
+
+
+  @Test
+  @Order(15)
+  @DisplayName("Delete Task")
+  void deleteTask() {
+    String url = TestUtility.createToDoURL(port,
+            UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}");
+    Map<String, Object> params = new HashMap<>();
+    params.put("listId", listId);
+    params.put("taskId", taskId);
+
+    URI uri = UriComponentsBuilder.fromUriString(url)
+            .uriVariables(params)
+            .build()
+            .toUri();
+    HttpEntity<HttpHeaders> request = new HttpEntity<>(RequestUtil.getHeaders());
+
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+            HttpMethod.DELETE, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getMessages());
+    List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
+            new TypeToken<List<ToDoDto>>() {}.getType());
+    Optional<ToDoDto> optionalToDo =
+            toDoDtoList.stream().filter(t -> t.getId().equals(taskId)).findFirst();
+    assertFalse(optionalToDo.isPresent());
+  }
+
+  @Test
+  @Order(16)
+  @DisplayName("Delete Todo List")
   void deleteList() {
     String url = TestUtility.createToDoURL(port,
       UrlConstants.LIST + "/{listId}");
@@ -280,7 +409,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(13)
+  @Order(17)
   @DisplayName("Delete TodoLists Failure")
   void afterDeleteTest() {
     String url = TestUtility.createToDoURL(port,
