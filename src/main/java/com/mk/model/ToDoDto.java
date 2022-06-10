@@ -1,9 +1,10 @@
 package com.mk.model;
 
-import lombok.AllArgsConstructor;
+import com.mk.constants.ErrorConstants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -11,8 +12,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ToDoDto implements Serializable {
 
-  private Long id;
-  private String title;
-  private Boolean isDone;
-  private LocalDateTime completedDate;
+    private Long id;
+    @Max(value = 100, message = ErrorConstants.TASK_TITLE_VALIDATION_MESSAGE)
+    private String title;
+    private Boolean isDone;
+    private LocalDateTime completedDate;
 }

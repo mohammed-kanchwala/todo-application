@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @Slf4j
 public class ToDoExceptionHandler {
@@ -25,6 +27,7 @@ public class ToDoExceptionHandler {
                         .build())
                 .build();
     }
+
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public Object handleAccessDeniedException(Exception exception) {
@@ -37,7 +40,8 @@ public class ToDoExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler({ServiceException.class, IllegalArgumentException.class})
+    @ExceptionHandler({ServiceException.class, IllegalArgumentException.class
+            , ConstraintViolationException.class})
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public Object handleCustomException(ServiceException ex) {
         log.error("ApiException thrown: ", ex);

@@ -13,4 +13,8 @@ public class ErrorConstants {
   public static final String INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
   public static final String ACCESS_DENIED = "ACCESS_DENIED";
   public static final String ACCESS_DENIED_MESSAGE = "You do not have access to this API or Request is Invalid. Please check and try again.";
+    public static final String LINE_NAME_VALIDATION_MESSAGE = "Line Name can " +
+            "not be more than 100 characters";
+    public static final String TASK_TITLE_VALIDATION_MESSAGE = "Line Name can" +
+            " not be more than 100 characters";
 }
