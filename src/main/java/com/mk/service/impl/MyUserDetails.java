@@ -1,6 +1,6 @@
 package com.mk.service.impl;
 
-import com.mk.entity.Role;
+import com.mk.entity.List;
 import com.mk.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 public class MyUserDetails implements UserDetails {
@@ -20,9 +19,9 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Role> roles = user.getRoles();
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase())));
+        Set<List> lists = user.getLists();
+        java.util.List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        lists.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase())));
         return authorities;
     }
 

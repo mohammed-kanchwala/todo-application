@@ -1,13 +1,14 @@
 package com.mk.service.impl;
 
-import com.mk.entity.Role;
+import com.mk.constants.ApplicationConstants;
+import com.mk.entity.List;
 import com.mk.entity.ToDo;
 import com.mk.entity.User;
 import com.mk.exception.ServiceException;
 import com.mk.model.ErrorInfo;
-import com.mk.model.RoleDto;
+import com.mk.model.ListDto;
 import com.mk.model.ToDoDto;
-import com.mk.repository.RoleRepository;
+import com.mk.repository.ListRepository;
 import com.mk.repository.ToDoRepository;
 import com.mk.repository.UserRepository;
 import com.mk.service.ToDoService;
@@ -19,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -36,35 +36,37 @@ public class ToDoServiceImpl implements ToDoService {
     private UserRepository userRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    private ListRepository listRepository;
 
     @Autowired
     private ModelMapper mapper;
 
     @Override
-    public List<RoleDto> findAllList() {
+    public java.util.List<ListDto> findAllList() {
         return getAllListNames();
     }
 
-    private List<RoleDto> getAllListNames() {
-        List<Role> list = StreamSupport.stream(roleRepository.findAll().spliterator(), false).collect(Collectors.toList()).stream().filter(r -> !r.getName().equalsIgnoreCase("USER")).collect(Collectors.toList());
-        return mapper.map(list, new TypeToken<List<RoleDto>>() {}.getType());
+    private java.util.List<ListDto> getAllListNames() {
+        java.util.List<List> list = StreamSupport.stream(
+          listRepository.findAll().spliterator(), false).collect(Collectors.toList()).stream().filter(r -> !r.getName().equalsIgnoreCase(
+          ApplicationConstants.USER_ROLE)).collect(Collectors.toList());
+        return mapper.map(list, new TypeToken<java.util.List<ListDto>>() {}.getType());
     }
 
     @Override
-    public List<RoleDto> createList(Authentication authentication, String listName) throws ServiceException {
-        Role role = roleRepository.findByName(listName).orElse(null);
-        if (Objects.nonNull(role)) {
+    public java.util.List<ListDto> createList(Authentication authentication, String listName) throws ServiceException {
+        List list = listRepository.findByName(listName).orElse(null);
+        if (Objects.nonNull(list)) {
             throw new ServiceException(ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name()).message("A List with same name already exists").build());
         }
-        Role newRole = new Role();
-        newRole.setName(listName);
+        List newList = new List();
+        newList.setName(listName);
         Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            Set<Role> roles = user.getRoles();
-            roles.add(newRole);
-            user.setRoles(roles);
+            Set<List> lists = user.getLists();
+            lists.add(newList);
+            user.setLists(lists);
             userRepository.save(user);
             return getAllListNames();
         }
@@ -72,15 +74,16 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public List<RoleDto> updateList(Authentication authentication, Long id, String listName) {
-        Optional<Role> optionalRole = roleRepository.findById(id);
+    public java.util.List<ListDto> updateList(Authentication authentication, Long id, String listName) {
+        Optional<List> optionalRole = listRepository.findByIdAndNameNot(id,
+          ApplicationConstants.USER_ROLE);
         optionalRole.ifPresent(role -> {
             role.setName(listName);
             Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
             optionalUser.ifPresent(user -> {
-                Set<Role> roles = user.getRoles();
-                roles.add(role);
-                user.setRoles(roles);
+                Set<List> lists = user.getLists();
+                lists.add(role);
+                user.setLists(lists);
                 userRepository.save(user);
             });
         });
@@ -88,56 +91,56 @@ public class ToDoServiceImpl implements ToDoService {
     }
 
     @Override
-    public List<RoleDto> deleteList(Authentication authentication, Long listId) {
-        Optional<Role> optionalRole = roleRepository.findById(listId);
+    public java.util.List<ListDto> deleteList(Authentication authentication, Long listId) {
+        Optional<List> optionalRole = listRepository.findById(listId);
         optionalRole.ifPresent(role -> {
             Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
             optionalUser.ifPresent(user -> {
-                Set<Role> roles = user.getRoles();
-                roles.remove(role);
-                user.setRoles(roles);
+                Set<List> lists = user.getLists();
+                lists.remove(role);
+                user.setLists(lists);
                 userRepository.save(user);
-                roleRepository.delete(role);
+                listRepository.delete(role);
             });
         });
         return getAllListNames();
     }
 
     @Override
-    public List<ToDoDto> getAllTask(Long listId) {
+    public java.util.List<ToDoDto> getAllTask(Long listId) {
         return mapper.map(toDoRepository.findAllByListId(listId),
-                new TypeToken<List<ToDoDto>>() {}.getType());
+                new TypeToken<java.util.List<ToDoDto>>() {}.getType());
     }
 
     @Override
-    public List<ToDoDto> addTask(Long listId, ToDoDto todoTask) throws ServiceException {
+    public java.util.List<ToDoDto> addTask(Long listId, ToDoDto todoTask) throws ServiceException {
         ToDo todo = toDoRepository.findByTitle(todoTask.getTitle());
         if (Objects.nonNull(todo)) {
             throw new ServiceException(ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name()).message("A Task with same Title already exists").build());
         }
         ToDo task = new ToDo();
         BeanUtils.copyProperties(todoTask, task);
-        Role role = roleRepository.findById(listId).orElse(null);
-        if (Objects.nonNull(role)) {
-            task.setList(role);
+        List list = listRepository.findById(listId).orElse(null);
+        if (Objects.nonNull(list)) {
+            task.setList(list);
             toDoRepository.save(task);
         }
-        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<List<ToDoDto>>() {}.getType());
+        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<java.util.List<ToDoDto>>() {}.getType());
     }
 
     @Override
-    public List<ToDoDto> updateTask(Long listId, Long taskId, ToDoDto todoTask) throws ServiceException {
+    public java.util.List<ToDoDto> updateTask(Long listId, Long taskId, ToDoDto todoTask) throws ServiceException {
         ToDo task = toDoRepository.findById(taskId).orElseThrow(() -> new ServiceException(ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name()).message("No task found to update !!").build()));
         task.setTitle(todoTask.getTitle());
         task.setCompletedDate(todoTask.getCompletedDate());
         task.setIsDone(todoTask.getIsDone());
         toDoRepository.save(task);
-        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<List<ToDoDto>>() {}.getType());
+        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<java.util.List<ToDoDto>>() {}.getType());
     }
 
     @Override
-    public List<ToDoDto> deleteTask(Long listId, Long id) {
+    public java.util.List<ToDoDto> deleteTask(Long listId, Long id) {
         toDoRepository.deleteById(id);
-        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<List<ToDoDto>>() {}.getType());
+        return mapper.map(toDoRepository.findAllByListId(listId), new TypeToken<java.util.List<ToDoDto>>() {}.getType());
     }
 }

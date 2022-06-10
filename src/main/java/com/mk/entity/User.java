@@ -26,13 +26,14 @@ public class User {
     private String lastName;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
+    @JoinTable(name = "users_lists",
             joinColumns = {
                 @JoinColumn(name = "user_id", nullable = false, updatable = false)},
-                inverseJoinColumns = {@JoinColumn(name = "role_id", nullable = false, updatable = false)})
-    private Set<Role> roles = new HashSet<>();
+                inverseJoinColumns = {@JoinColumn(name = "list_id", nullable =
+                  false, updatable = false)})
+    private Set<List> lists = new HashSet<>();
 
-    private void addRole(Role role) {
-        this.roles.add(role);
+    private void addList(List list) {
+        this.lists.add(list);
     }
 }

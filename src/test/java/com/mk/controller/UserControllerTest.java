@@ -39,12 +39,8 @@ class UserControllerTest {
     @Autowired
     private ModelMapper mapper;
 
-    @BeforeEach
-    void setUp() {
-    }
-
     @Test
-    @Order(1)
+    @Order(2)
     @DisplayName("User Registration Test")
     void registerUser() {
         URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.REGISTER)).build().toUri();
@@ -54,12 +50,13 @@ class UserControllerTest {
         ResponseEntity<ApiResponse> response = restTemplate.exchange(uri, HttpMethod.POST, request, ApiResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(HttpStatus.OK, Objects.requireNonNull(response.getBody()).getStatus());
+        assertEquals(HttpStatus.OK,
+          Objects.requireNonNull(response.getBody()).getStatus());
     }
 
 
     @Test
-    @Order(2)
+    @Order(3)
     @DisplayName("User Authentication Test")
     void authenticateUser() {
         URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.AUTHENTICATE)).build().toUri();
@@ -69,7 +66,8 @@ class UserControllerTest {
         ResponseEntity<ApiResponse> response = restTemplate.exchange(uri, HttpMethod.POST, request, ApiResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(HttpStatus.OK, Objects.requireNonNull(response.getBody()).getStatus());
+        assertEquals(HttpStatus.OK,
+          Objects.requireNonNull(response.getBody()).getStatus());
         assertNotNull(response.getBody().getMessage());
         JwtResponse jwtResponse = mapper.map(response.getBody().getMessage(), JwtResponse.class);
         assertNotNull(jwtResponse.getJwtToken());
