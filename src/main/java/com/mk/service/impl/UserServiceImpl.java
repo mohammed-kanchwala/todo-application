@@ -1,7 +1,7 @@
 package com.mk.service.impl;
 
 import com.mk.constants.ApplicationConstants;
-import com.mk.entity.List;
+import com.mk.entity.TodoLists;
 import com.mk.entity.User;
 import com.mk.exception.ServiceException;
 import com.mk.model.ErrorInfo;
@@ -43,11 +43,11 @@ public class UserServiceImpl implements UserService {
     userEntity = new User();
     BeanUtils.copyProperties(user, userEntity);
     userEntity.setPassword(encoder.encode(user.getPassword()));
-    List list = new List();
-    list.setName(ApplicationConstants.USER_ROLE);
-    Set<List> listSet = new HashSet<>();
-    listSet.add(list);
-    userEntity.setLists(listSet);
+    TodoLists todoLists = new TodoLists();
+    todoLists.setName(ApplicationConstants.USER_ROLE);
+    Set<TodoLists> todoListsSet = new HashSet<>();
+    todoListsSet.add(todoLists);
+    userEntity.setTodoLists(todoListsSet);
     userRepository.save(userEntity);
   }
 }

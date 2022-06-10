@@ -1,14 +1,13 @@
 package com.mk.repository;
 
-import com.mk.entity.List;
+import com.mk.entity.TodoLists;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface ListRepository extends JpaRepository<List, Long> {
+public interface ListRepository extends JpaRepository<TodoLists, Long> {
 
-    Optional<List> findByName(String name);
+    Optional<TodoLists> findByName(String name);
 
-  Optional<List> findByIdAndNameNot(Long id, String user);
+  Optional<TodoLists> findByIdAndNameNot(Long id, String user);
 }

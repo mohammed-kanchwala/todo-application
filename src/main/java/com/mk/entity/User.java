@@ -31,9 +31,9 @@ public class User {
                 @JoinColumn(name = "user_id", nullable = false, updatable = false)},
                 inverseJoinColumns = {@JoinColumn(name = "list_id", nullable =
                   false, updatable = false)})
-    private Set<List> lists = new HashSet<>();
+    private Set<TodoLists> todoLists = new HashSet<>();
 
-    private void addList(List list) {
-        this.lists.add(list);
+    private void addList(TodoLists todoLists) {
+        this.todoLists.add(todoLists);
     }
 }

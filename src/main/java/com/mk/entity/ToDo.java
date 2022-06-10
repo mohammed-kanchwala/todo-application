@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "TO_DO")
+@Table(name = "to_dos")
 @Getter
 @Setter
 public class ToDo {
@@ -20,5 +20,5 @@ public class ToDo {
     private LocalDateTime completedDate;
     @ManyToOne
     @JoinColumn(name = "list_name_id")
-    private List list;
+    private TodoLists list;
 }
