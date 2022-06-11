@@ -26,5 +26,5 @@ public interface ToDoService {
 	List<ToDoDto> updateTask(Long listId, Long taskId, ToDoDto todoTask)
 					throws ServiceException;
 
-	List<ToDoDto> deleteTask(Long listId, Long id);
+	List<ToDoDto> deleteTask(Long listId, Long id) throws ServiceException;
 }

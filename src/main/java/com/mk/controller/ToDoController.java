@@ -109,7 +109,7 @@ public class ToDoController {
 	@DeleteMapping(
 					value = UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}")
 	public ResponseEntity<ApiResponse<?>> deleteTask(@PathVariable Long listId,
-					@PathVariable Long taskId) {
+					@PathVariable Long taskId) throws ServiceException {
 		return ok(ApiResponse.builder().status(HttpStatus.OK)
 						.messages(toDoService.deleteTask(listId, taskId))
 						.message("Task deleted successfully !!").build());

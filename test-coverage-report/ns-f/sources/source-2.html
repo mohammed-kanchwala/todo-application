@@ -1,0 +1,99 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > ToDoService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.mk.service</a>
+</div>
+
+<h1>Coverage Summary for Class: ToDoService (com.mk.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ToDoService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package com.mk.service;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import com.mk.exception.ServiceException;
+<i class="no-highlight">4</i>&nbsp;import com.mk.model.ListDto;
+<i class="no-highlight">5</i>&nbsp;import com.mk.model.ToDoDto;
+<i class="no-highlight">6</i>&nbsp;import org.springframework.security.core.Authentication;
+<i class="no-highlight">7</i>&nbsp;
+<i class="no-highlight">8</i>&nbsp;import java.util.List;
+<i class="no-highlight">9</i>&nbsp;
+<i class="no-highlight">10</i>&nbsp;public interface ToDoService {
+<i class="no-highlight">11</i>&nbsp;
+<i class="no-highlight">12</i>&nbsp;	List&lt;ListDto&gt; findAllList();
+<i class="no-highlight">13</i>&nbsp;
+<i class="no-highlight">14</i>&nbsp;	List&lt;ListDto&gt; createList(Authentication authentication, String listName)
+<i class="no-highlight">15</i>&nbsp;					throws ServiceException;
+<i class="no-highlight">16</i>&nbsp;
+<i class="no-highlight">17</i>&nbsp;	List&lt;ListDto&gt; updateList(Authentication authentication, Long id,
+<i class="no-highlight">18</i>&nbsp;					String listName);
+<i class="no-highlight">19</i>&nbsp;
+<i class="no-highlight">20</i>&nbsp;	List&lt;ListDto&gt; deleteList(Authentication authentication, Long listId);
+<i class="no-highlight">21</i>&nbsp;
+<i class="no-highlight">22</i>&nbsp;	List&lt;ToDoDto&gt; getAllTask(Long listId);
+<i class="no-highlight">23</i>&nbsp;
+<i class="no-highlight">24</i>&nbsp;	List&lt;ToDoDto&gt; addTask(Long listId, ToDoDto todoTask) throws ServiceException;
+<i class="no-highlight">25</i>&nbsp;
+<i class="no-highlight">26</i>&nbsp;	List&lt;ToDoDto&gt; updateTask(Long listId, Long taskId, ToDoDto todoTask)
+<i class="no-highlight">27</i>&nbsp;					throws ServiceException;
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;	List&lt;ToDoDto&gt; deleteTask(Long listId, Long id) throws ServiceException;
+<i class="no-highlight">30</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-06-11 14:51</div>
+</div>
+</body>
+</html>

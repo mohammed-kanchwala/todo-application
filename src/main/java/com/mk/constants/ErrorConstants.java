@@ -18,5 +18,5 @@ public class ErrorConstants {
 	public static final String LINE_NAME_VALIDATION_MESSAGE =
 					"Line Name can not be more than 100 characters";
 	public static final String TASK_TITLE_VALIDATION_MESSAGE =
-					"Line Name can not be more than 100 characters";
+					"Task Title can not be more than 100 characters";
 }

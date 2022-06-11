@@ -26,8 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Service
-public class ToDoServiceImpl implements ToDoService {
+@Service public class ToDoServiceImpl implements ToDoService {
 
 	@Autowired
 	private ToDoRepository toDoRepository;
@@ -38,37 +37,33 @@ public class ToDoServiceImpl implements ToDoService {
 	@Autowired
 	private ListRepository listRepository;
 
-	@Override
-	public List<ListDto> findAllList() {
+	@Override public List<ListDto> findAllList() {
 		return getAllListNames();
 	}
 
 	private List<ListDto> getAllListNames() {
-		List<TodoLists> todoLists = StreamSupport.stream(
-										listRepository.findAll().spliterator(), false)
-						.collect(Collectors.toList())
-						.stream()
-						.filter(
-										r -> !r.getName()
+		List<TodoLists> todoLists =
+						StreamSupport.stream(listRepository.findAll().spliterator(), false)
+										.collect(Collectors.toList()).stream()
+										.filter(r -> !r.getName()
 														.equalsIgnoreCase(ApplicationConstants.USER_ROLE))
-						.collect(Collectors.toList());
+										.collect(Collectors.toList());
 		return MapperUtil.mapAll(todoLists, ListDto.class);
 	}
 
-	@Override
-	public List<ListDto> createList(Authentication authentication,
+	@Override public List<ListDto> createList(Authentication authentication,
 					String listName) throws ServiceException {
 		TodoLists todoLists = listRepository.findByName(listName).orElse(null);
 		if (Objects.nonNull(todoLists)) {
-			throw new ServiceException(ErrorInfo.builder()
-							.code(HttpStatus.BAD_REQUEST.name())
-							.message("A TodoLists with same name already exists")
-							.build());
+			throw new ServiceException(
+							ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name())
+											.message("A TodoLists with same name already exists")
+											.build());
 		}
 		TodoLists newTodoLists = new TodoLists();
 		newTodoLists.setName(listName);
-		Optional<User> optionalUser = userRepository.findByEmail(
-						authentication.getName());
+		Optional<User> optionalUser =
+						userRepository.findByEmail(authentication.getName());
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			Set<TodoLists> listsSet = user.getTodoLists();
@@ -77,22 +72,20 @@ public class ToDoServiceImpl implements ToDoService {
 			userRepository.save(user);
 			return getAllListNames();
 		}
-		throw new ServiceException(ErrorInfo.builder()
-						.code(HttpStatus.BAD_REQUEST.name())
-						.message("Unable to create todoLists")
-						.build());
+		throw new ServiceException(
+						ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name())
+										.message("Unable to create todoLists").build());
 	}
 
 	@Override
-	public List<ListDto> updateList(Authentication authentication,
-					Long id,
+	public List<ListDto> updateList(Authentication authentication, Long id,
 					String listName) {
 		Optional<TodoLists> optionalRole = listRepository.findByIdAndNameNot(id,
 						ApplicationConstants.USER_ROLE);
 		optionalRole.ifPresent(role -> {
 			role.setName(listName);
-			Optional<User> optionalUser = userRepository.findByEmail(
-							authentication.getName());
+			Optional<User> optionalUser =
+							userRepository.findByEmail(authentication.getName());
 			optionalUser.ifPresent(user -> {
 				Set<TodoLists> todoLists = user.getTodoLists();
 				todoLists.add(role);
@@ -107,8 +100,8 @@ public class ToDoServiceImpl implements ToDoService {
 	public List<ListDto> deleteList(Authentication authentication, Long listId) {
 		Optional<TodoLists> optionalList = listRepository.findById(listId);
 		optionalList.ifPresent(list -> {
-			Optional<User> optionalUser = userRepository.findByEmail(
-							authentication.getName());
+			Optional<User> optionalUser =
+							userRepository.findByEmail(authentication.getName());
 			optionalUser.ifPresent(user -> {
 				Set<TodoLists> todoLists = user.getTodoLists();
 				todoLists.remove(list);
@@ -123,14 +116,12 @@ public class ToDoServiceImpl implements ToDoService {
 		return getAllListNames();
 	}
 
-	@Override
-	public List<ToDoDto> getAllTask(Long listId) {
+	@Override public List<ToDoDto> getAllTask(Long listId) {
 		return MapperUtil.mapAll(toDoRepository.findAllByListId(listId),
 						ToDoDto.class);
 	}
 
-	@Override
-	public List<ToDoDto> addTask(Long listId, ToDoDto todoTask)
+	@Override public List<ToDoDto> addTask(Long listId, ToDoDto todoTask)
 					throws ServiceException {
 		ToDo todo = toDoRepository.findByTitle(todoTask.getTitle());
 		if (Objects.isNull(todo)) {
@@ -149,20 +140,26 @@ public class ToDoServiceImpl implements ToDoService {
 	@Override
 	public List<ToDoDto> updateTask(Long listId, Long taskId, ToDoDto todoTask)
 					throws ServiceException {
-		ToDo task = toDoRepository.findById(taskId)
-						.orElseThrow(() -> new ServiceException(ErrorInfo.builder()
-										.code(HttpStatus.BAD_REQUEST.name())
-										.message("No task found to update !!")
-										.build()));
+		ToDo task = toDoRepository.findById(taskId).orElseThrow(
+						() -> new ServiceException(
+										ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name())
+														.message("No task found to update !!").build()));
 		BeanUtils.copyProperties(todoTask, task, "id");
 		toDoRepository.save(task);
 		return MapperUtil.mapAll(toDoRepository.findAllByListId(listId),
 						ToDoDto.class);
 	}
 
-	@Override
-	public List<ToDoDto> deleteTask(Long listId, Long id) {
-		toDoRepository.deleteById(id);
+	@Override public List<ToDoDto> deleteTask(Long listId, Long id)
+					throws ServiceException {
+		Optional<ToDo> task = toDoRepository.findById(id);
+		if (task.isEmpty()) {
+			throw new ServiceException(
+							ErrorInfo.builder().code(HttpStatus.BAD_REQUEST.name())
+											.message("Task with same id does not exits").build());
+		}
+
+		task.ifPresent(t -> toDoRepository.deleteById(id));
 		return MapperUtil.mapAll(toDoRepository.findAllByListId(listId),
 						ToDoDto.class);
 	}

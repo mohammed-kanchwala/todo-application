@@ -19,6 +19,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.*;
 
@@ -347,12 +348,62 @@ class ToDoControllerTest {
 						HttpMethod.PUT, request, ApiResponse.class);
 		return response;
 	}
+	private ResponseEntity<ApiResponse> deleteTaskTest(Long listId, Long taskId) {
+		String url = TestUtility.createToDoURL(port,
+						UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}");
+		Map<String, Object> params = new HashMap<>();
+		params.put("listId", listId);
+		params.put("taskId", taskId);
 
+		URI uri = UriComponentsBuilder.fromUriString(url)
+						.uriVariables(params)
+						.build()
+						.toUri();
+		HttpEntity<HttpHeaders> request =
+						new HttpEntity<>(RequestUtil.getHeaders());
+
+		ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+						HttpMethod.DELETE, request, ApiResponse.class);
+		return response;
+	}
 
 	@Test
 	@Order(13)
-	@DisplayName("Delete Task")
-	void deleteTask() {
+	@DisplayName("Delete Task With Invalid List Id")
+	void deleteTask_WithInValidListId() {
+		ResponseEntity<ApiResponse> response = deleteTaskTest(0L, taskId);
+
+		assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
+		assertNotNull(response.getBody());
+		ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+						ApiResponse.class);
+		assertNotNull(apiResponse.getError());
+		ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
+						ErrorInfo.class);
+		assertEquals(ErrorConstants.ACCESS_DENIED, errorInfo.getCode());
+		assertEquals(ErrorConstants.ACCESS_DENIED_MESSAGE, errorInfo.getMessage());
+	}
+
+	@Test
+	@Order(14)
+	@DisplayName("Delete Task With Invalid Task Id")
+	void deleteTask_WithInValidTaskId() {
+		ResponseEntity<ApiResponse> response = deleteTaskTest(listId, 0L);
+
+		assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
+		assertNotNull(response.getBody());
+		ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+						ApiResponse.class);
+		assertNotNull(apiResponse.getError());
+		ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
+						ErrorInfo.class);
+		assertEquals(HttpStatus.BAD_REQUEST.name(), errorInfo.getCode());
+	}
+
+	@Test
+	@Order(15)
+	@DisplayName("Delete Task With Valid Details")
+	void deleteTask_WithValidDetails() {
 		String url = TestUtility.createToDoURL(port,
 						UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}");
 		Map<String, Object> params = new HashMap<>();
@@ -384,7 +435,7 @@ class ToDoControllerTest {
 	}
 
 	@Test
-	@Order(14)
+	@Order(16)
 	@DisplayName("Delete Todo List")
 	void deleteList() {
 		String url = TestUtility.createToDoURL(port,
@@ -413,7 +464,7 @@ class ToDoControllerTest {
 	}
 
 	@Test
-	@Order(15)
+	@Order(17)
 	@DisplayName("Delete TodoLists Failure")
 	void afterDeleteTest() {
 		String url = TestUtility.createToDoURL(port,
