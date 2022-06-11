@@ -9,145 +9,131 @@ import com.mk.model.ToDoDto;
 import com.mk.util.MapperUtil;
 import com.mk.util.RequestUtil;
 import com.mk.util.TestUtility;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("rawtypes")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ToDoControllerTest extends UserControllerTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
 
-    @LocalServerPort
-    private int port;
+  @LocalServerPort
+  private int port;
 
-    private static Long listId;
-    private static Long taskId;
+  private static Long listId;
+  private static Long taskId;
 
-    @Test
-    @Order(1)
-    @DisplayName("Test Home Page Without Register and Login")
-    void homePage_WithoutRegisterAndLogin() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(TestUtility.createToDoURL(port, "/"));
+  @Test
+  @Order(1)
+  @DisplayName("Test Home Page Without Register and Login")
+  void homePage_WithoutRegisterAndLogin() {
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(TestUtility.createToDoURL(port, "/"));
 
-        ResponseEntity<Object> response =
-          restTemplate.getForEntity(builder.toUriString(), Object.class);
+    ResponseEntity<Object> response =
+            restTemplate.getForEntity(builder.toUriString(), Object.class);
 
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
-    @Order(4)
-    @DisplayName("Test Home Page")
-    void homePage_WithRegisterAndLogin() {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(TestUtility.createToDoURL(port, "/"));
-
-        HttpEntity<HttpHeaders> request = new HttpEntity<>(RequestUtil.getHeaders());
-        ResponseEntity<ApiResponse> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, ApiResponse.class);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(HttpStatus.OK, Objects.requireNonNull(response.getBody()).getStatus());
-    }
-
-    @Test
-    @Order(5)
-    @DisplayName("Get All TodoLists Empty Response")
-    void getList() {
-      URI uri = UriComponentsBuilder.fromHttpUrl(
-        TestUtility.createToDoURL(port, UrlConstants.LIST)).build().toUri();
-
-      HttpEntity<HttpHeaders> request = new HttpEntity<>(
-        RequestUtil.getHeaders());
-      ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-        HttpMethod.GET, request, ApiResponse.class);
-
-      assertEquals(HttpStatus.OK, response.getStatusCode());
-      assertNotNull(response.getBody());
-      ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-        ApiResponse.class);
-      assertNotNull(apiResponse.getMessages());
-      List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
-      assertEquals(0, listDtoList.size());
-    }
-
-    @Test
-    @Order(6)
-    @DisplayName("Create Todo List")
-    void createList() {
-      String url = TestUtility.createToDoURL(port,
-        UrlConstants.LIST + "/{listName}");
-      Map<String, Object> params = new HashMap<>();
-      params.put("listName", "New TodoLists");
-      URI uri = UriComponentsBuilder.fromUriString(url)
-        .uriVariables(params)
-        .build()
-        .toUri();
-      HttpEntity<HttpHeaders> request = new HttpEntity<>(
-        RequestUtil.getHeaders());
-
-      ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-        HttpMethod.POST, request, ApiResponse.class);
-
-      assertEquals(HttpStatus.OK, response.getStatusCode());
-      assertNotNull(response.getBody());
-      ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-        ApiResponse.class);
-      assertNotNull(apiResponse.getMessages());
-      List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
-
-      assertEquals(1, listDtoList.size());
-    }
-
+    assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+  }
 
   @Test
   @Order(7)
-  @DisplayName("Get All Todo List Including Newly Created")
-  void getList_AfterCreation() {
+  @DisplayName("Test Home Page")
+  void homePage_WithRegisterAndLogin() {
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(TestUtility.createToDoURL(port, "/"));
+
+    HttpEntity<HttpHeaders> request = new HttpEntity<>(RequestUtil.getHeaders());
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(HttpStatus.OK, Objects.requireNonNull(response.getBody()).getStatus());
+  }
+
+  @Test
+  @Order(8)
+  @DisplayName("Get All TodoLists Empty Response")
+  void getList() {
     URI uri = UriComponentsBuilder.fromHttpUrl(
-      TestUtility.createToDoURL(port, UrlConstants.LIST)).build().toUri();
+            TestUtility.createToDoURL(port, UrlConstants.LIST)).build().toUri();
 
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.GET, request, ApiResponse.class);
+            HttpMethod.GET, request, ApiResponse.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
+    assertNotNull(apiResponse.getMessages());
+    List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
+    assertEquals(0, listDtoList.size());
+  }
+
+  @Test
+  @Order(9)
+  @DisplayName("Create Todo List")
+  void createList() {
+    String url = TestUtility.createToDoURL(port,
+            UrlConstants.LIST + "/{listName}");
+    Map<String, Object> params = new HashMap<>();
+    params.put("listName", "New TodoLists");
+    URI uri = UriComponentsBuilder.fromUriString(url)
+            .uriVariables(params)
+            .build()
+            .toUri();
+    HttpEntity<HttpHeaders> request = new HttpEntity<>(
+            RequestUtil.getHeaders());
+
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+            HttpMethod.POST, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
+    assertNotNull(apiResponse.getMessages());
+    List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
+
+    assertEquals(1, listDtoList.size());
+  }
+
+
+  @Test
+  @Order(10)
+  @DisplayName("Get All Todo List Including Newly Created")
+  void getList_AfterCreation() {
+    URI uri = UriComponentsBuilder.fromHttpUrl(
+            TestUtility.createToDoURL(port, UrlConstants.LIST)).build().toUri();
+
+    HttpEntity<HttpHeaders> request = new HttpEntity<>(
+            RequestUtil.getHeaders());
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
+            HttpMethod.GET, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertNotNull(response.getBody());
+    ApiResponse apiResponse = MapperUtil.map(response.getBody(),
+            ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ListDto> listDtoList = new ModelMapper().map(apiResponse.getMessages(),
-      new TypeToken<List<ListDto>>() {}.getType());
+            new TypeToken<List<ListDto>>() {
+            }.getType());
     Optional<ListDto> matchingRole = listDtoList.stream()
-      .filter(r -> r.getName().equalsIgnoreCase("New TodoLists"))
-      .findAny();
+            .filter(r -> r.getName().equalsIgnoreCase("New TodoLists"))
+            .findAny();
 
     assertTrue(matchingRole.isPresent());
     assertEquals(1, listDtoList.size());
@@ -155,94 +141,95 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(8)
+  @Order(11)
   @DisplayName("Update List Name")
-    void updateList() {
+  void updateList() {
     String url = TestUtility.createToDoURL(port,
-      UrlConstants.LIST + "/{listId}");
+            UrlConstants.LIST + "/{listId}");
     Map<String, Object> params = new HashMap<>();
     params.put("listId", listId);
     URI uri = UriComponentsBuilder.fromUriString(url)
-      .uriVariables(params)
-      .queryParam("listName", "New Updated TodoLists")
-      .build()
-      .toUri();
+            .uriVariables(params)
+            .queryParam("listName", "New Updated TodoLists")
+            .build()
+            .toUri();
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.PUT, request, ApiResponse.class);
+            HttpMethod.PUT, request, ApiResponse.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ListDto> listDtoList = new ModelMapper().map(apiResponse.getMessages(),
-      new TypeToken<List<ListDto>>() {}.getType());
+            new TypeToken<List<ListDto>>() {
+            }.getType());
     assertTrue(listDtoList.stream()
-      .anyMatch(r -> r.getName().equalsIgnoreCase("New Updated TodoLists")));
+            .anyMatch(r -> r.getName().equalsIgnoreCase("New Updated TodoLists")));
   }
 
   @Test
-  @Order(9)
+  @Order(12)
   @DisplayName("Update List Name with Invalid Id")
-    void updateList_WithInvalidId() {
+  void updateList_WithInvalidId() {
     String url = TestUtility.createToDoURL(port,
-      UrlConstants.LIST + "/{listId}");
+            UrlConstants.LIST + "/{listId}");
     Map<String, Object> params = new HashMap<>();
     params.put("listId", 0);
     URI uri = UriComponentsBuilder.fromUriString(url)
-      .uriVariables(params)
-      .queryParam("listName", "New Updated TodoLists")
-      .build()
-      .toUri();
+            .uriVariables(params)
+            .queryParam("listName", "New Updated TodoLists")
+            .build()
+            .toUri();
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.PUT, request, ApiResponse.class);
+            HttpMethod.PUT, request, ApiResponse.class);
 
     assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
     assertNotNull(apiResponse.getError());
     ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
-      ErrorInfo.class);
+            ErrorInfo.class);
     assertEquals(ErrorConstants.ACCESS_DENIED, errorInfo.getCode());
     assertEquals(ErrorConstants.ACCESS_DENIED_MESSAGE, errorInfo.getMessage());
   }
 
   @Test
-  @Order(10)
+  @Order(13)
   @DisplayName("Get All the Tasks for an Empty List")
   void getAllTask() {
     String url = TestUtility.createToDoURL(port,
-      UrlConstants.LIST + "/{listId}" + "/task");
+            UrlConstants.LIST + "/{listId}" + "/task");
     Map<String, Object> params = new HashMap<>();
     params.put("listId", listId);
     URI uri = UriComponentsBuilder.fromUriString(url)
-      .uriVariables(params)
-      .build()
-      .toUri();
+            .uriVariables(params)
+            .build()
+            .toUri();
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.GET, request, ApiResponse.class);
+            HttpMethod.GET, request, ApiResponse.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ToDoDto> toDoDtoList = MapperUtil.mapAll(apiResponse, ToDoDto.class);
     assertEquals(0, toDoDtoList.size());
   }
 
   @Test
-  @Order(11)
+  @Order(14)
   @DisplayName("Add a new Task And Verify Updated List")
   void addTask() {
     String url = TestUtility.createToDoURL(port,
@@ -254,7 +241,7 @@ class ToDoControllerTest extends UserControllerTest {
             .uriVariables(params)
             .build()
             .toUri();
-    ToDoDto toDoDto = RequestUtil.createToDo("New Task", false);
+    ToDoDto toDoDto = RequestUtil.createToDo("New Task", true);
     HttpEntity<ToDoDto> request = new HttpEntity<>(toDoDto,
             RequestUtil.getHeaders());
 
@@ -267,7 +254,8 @@ class ToDoControllerTest extends UserControllerTest {
             ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
-            new TypeToken<List<ToDoDto>>() {}.getType());
+            new TypeToken<List<ToDoDto>>() {
+            }.getType());
     assertEquals(1, toDoDtoList.size());
     Optional<ToDoDto> matchingDto =
             toDoDtoList.stream().filter(t -> t.getTitle().equals(toDoDto.getTitle())).findFirst();
@@ -275,7 +263,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(12)
+  @Order(15)
   @DisplayName("Update Task with Valid Id")
   void updateTask() {
     ResponseEntity<ApiResponse> response = updateTaskTest(listId, taskId,
@@ -287,7 +275,8 @@ class ToDoControllerTest extends UserControllerTest {
             ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
-            new TypeToken<List<ToDoDto>>() {}.getType());
+            new TypeToken<List<ToDoDto>>() {
+            }.getType());
     Optional<ToDoDto> optionalToDo =
             toDoDtoList.stream().filter(t -> t.getTitle().equals("Update Task")).findFirst();
     assertTrue(optionalToDo.isPresent());
@@ -295,7 +284,7 @@ class ToDoControllerTest extends UserControllerTest {
 
 
   @Test
-  @Order(13)
+  @Order(16)
   @DisplayName("Update Task with InValid Task Id")
   void updateTask_WithInvalidTaskId() {
     ResponseEntity<ApiResponse> response = updateTaskTest(listId, 0L,
@@ -312,10 +301,11 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(14)
+  @Order(17)
   @DisplayName("Update Task with InValid List Id")
   void updateTask_WithInvalidListId() {
-    ResponseEntity<ApiResponse> response = updateTaskTest(0L, taskId, RequestUtil.createToDo("Update Task", true));
+    ResponseEntity<ApiResponse> response = updateTaskTest(0L, taskId,
+            RequestUtil.createToDo("Update Task", true));
 
     assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
     assertNotNull(response.getBody());
@@ -328,7 +318,8 @@ class ToDoControllerTest extends UserControllerTest {
     assertEquals(ErrorConstants.ACCESS_DENIED_MESSAGE, errorInfo.getMessage());
   }
 
-  private ResponseEntity<ApiResponse> updateTaskTest(Long listId, Long taskId, ToDoDto update_task) {
+  private ResponseEntity<ApiResponse> updateTaskTest(Long listId, Long taskId
+          , ToDoDto task) {
     String url = TestUtility.createToDoURL(port,
             UrlConstants.LIST + "/{listId}" + "/task" + "/{taskId}");
     Map<String, Object> params = new HashMap<>();
@@ -339,9 +330,7 @@ class ToDoControllerTest extends UserControllerTest {
             .uriVariables(params)
             .build()
             .toUri();
-    HttpEntity<ToDoDto> request = new HttpEntity<>(RequestUtil.createToDo(
-            "Update Task", true),
-            RequestUtil.getHeaders());
+    HttpEntity<ToDoDto> request = new HttpEntity<>(task, RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
             HttpMethod.PUT, request, ApiResponse.class);
@@ -350,7 +339,7 @@ class ToDoControllerTest extends UserControllerTest {
 
 
   @Test
-  @Order(15)
+  @Order(18)
   @DisplayName("Delete Task")
   void deleteTask() {
     String url = TestUtility.createToDoURL(port,
@@ -374,63 +363,64 @@ class ToDoControllerTest extends UserControllerTest {
             ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ToDoDto> toDoDtoList = new ModelMapper().map(apiResponse.getMessages(),
-            new TypeToken<List<ToDoDto>>() {}.getType());
+            new TypeToken<List<ToDoDto>>() {
+            }.getType());
     Optional<ToDoDto> optionalToDo =
             toDoDtoList.stream().filter(t -> t.getId().equals(taskId)).findFirst();
     assertFalse(optionalToDo.isPresent());
   }
 
   @Test
-  @Order(16)
+  @Order(19)
   @DisplayName("Delete Todo List")
   void deleteList() {
     String url = TestUtility.createToDoURL(port,
-      UrlConstants.LIST + "/{listId}");
+            UrlConstants.LIST + "/{listId}");
     Map<String, Object> params = new HashMap<>();
     params.put("listId", listId);
     URI uri = UriComponentsBuilder.fromUriString(url)
-      .uriVariables(params)
-      .build()
-      .toUri();
+            .uriVariables(params)
+            .build()
+            .toUri();
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.DELETE, request, ApiResponse.class);
+            HttpMethod.DELETE, request, ApiResponse.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
     assertNotNull(apiResponse.getMessages());
     List<ListDto> listDtoList = MapperUtil.mapAll(apiResponse, ListDto.class);
     assertFalse(listDtoList.stream()
-      .anyMatch(r -> r.getName().equalsIgnoreCase("New Updated TodoLists")));
+            .anyMatch(r -> r.getName().equalsIgnoreCase("New Updated TodoLists")));
   }
 
   @Test
-  @Order(17)
+  @Order(20)
   @DisplayName("Delete TodoLists Failure")
   void afterDeleteTest() {
     String url = TestUtility.createToDoURL(port,
-      UrlConstants.LIST + "/{listId}");
+            UrlConstants.LIST + "/{listId}");
     Map<String, Object> params = new HashMap<>();
     params.put("listId", listId);
     URI uri = UriComponentsBuilder.fromUriString(url)
-      .uriVariables(params).build().toUri();
+            .uriVariables(params).build().toUri();
     HttpEntity<HttpHeaders> request = new HttpEntity<>(
-      RequestUtil.getHeaders());
+            RequestUtil.getHeaders());
 
     ResponseEntity<ApiResponse> response = restTemplate.exchange(uri,
-      HttpMethod.DELETE, request, ApiResponse.class);
+            HttpMethod.DELETE, request, ApiResponse.class);
 
     assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
     assertNotNull(response.getBody());
     ApiResponse apiResponse = MapperUtil.map(response.getBody(),
-      ApiResponse.class);
+            ApiResponse.class);
     assertNotNull(apiResponse.getError());
     ErrorInfo errorInfo = MapperUtil.map(apiResponse.getError(),
-      ErrorInfo.class);
+            ErrorInfo.class);
     assertEquals(ErrorConstants.ACCESS_DENIED, errorInfo.getCode());
     assertEquals(ErrorConstants.ACCESS_DENIED_MESSAGE, errorInfo.getMessage());
   }

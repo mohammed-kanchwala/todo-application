@@ -11,6 +11,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Builder
@@ -24,4 +25,5 @@ public class ApiResponse<T> {
     private T messages;
     private T message;
     private ErrorInfo error;
+    private List<ErrorInfo> fieldErrors;
 }

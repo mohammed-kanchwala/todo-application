@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 public class ListDto implements Serializable {
     private Long id;
-    @Max(value = 100, message = ErrorConstants.LINE_NAME_VALIDATION_MESSAGE)
+    @Size(max = 100, message = ErrorConstants.LINE_NAME_VALIDATION_MESSAGE)
     private String name;
 }
