@@ -10,6 +10,9 @@ Only user who has created the list can modify or delete the list and add/update/
 # API Endpoints Examples
 A postman collection is included in the repository for easyily accessing all the endpoints along with examples.
 
+## Directory Structure
+![Alt text](directory-structure.png?raw=true "Directory Structure")
+
 
 ## Test Results
 ![Alt text](test-result.gif?raw=true "Test Results")
