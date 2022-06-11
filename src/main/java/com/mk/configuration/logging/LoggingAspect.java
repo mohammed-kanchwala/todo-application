@@ -31,28 +31,28 @@ public class LoggingAspect {
 		} finally {
 			long elapsedTime = System.currentTimeMillis() - start;
 			log.info("{} -> Method execution time: {} milliseconds.",
-				joinPoint.getSignature().getName(), elapsedTime);
+							joinPoint.getSignature().getName(), elapsedTime);
 			log.info("{}.{}() - Exit",
-				joinPoint.getSignature().getDeclaringTypeName(),
-				joinPoint.getSignature().getName());
+							joinPoint.getSignature().getDeclaringTypeName(),
+							joinPoint.getSignature().getName());
 		}
 		return output;
 	}
 
 	private void logRequest(String inputParams) {
 		log.info(
-			"---------------------------------------------------------------- REQUEST START ----------------------------------------------------------------");
+						"---------------------------------------------------------------- REQUEST START ----------------------------------------------------------------");
 		log.info(inputParams);
 		log.info(
-			"---------------------------------------------------------------- REQUEST END    ----------------------------------------------------------------");
+						"---------------------------------------------------------------- REQUEST END    ----------------------------------------------------------------");
 	}
 
 	private void logResponse(Object output, ObjectMapper mapper) {
 		log.info(
-			"---------------------------------------------------------------- RESPONSE START ----------------------------------------------------------------");
+						"---------------------------------------------------------------- RESPONSE START ----------------------------------------------------------------");
 		log.info(getResponseObject(output, mapper));
 		log.info(
-			"---------------------------------------------------------------- RESPONSE END    ----------------------------------------------------------------");
+						"---------------------------------------------------------------- RESPONSE END    ----------------------------------------------------------------");
 	}
 
 	private String getResponseObject(Object output, ObjectMapper mapper) {

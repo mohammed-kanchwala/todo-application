@@ -10,9 +10,9 @@ import java.io.Serializable;
 @Data
 @Builder
 public class LoginUserDto implements Serializable {
-    private Long id;
-    @Email
-    @NotBlank
-    private String email;
-    private String password;
+	private Long id;
+	@Email
+	@NotBlank
+	private String email;
+	private String password;
 }

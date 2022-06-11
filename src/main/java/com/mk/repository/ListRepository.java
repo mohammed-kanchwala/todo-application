@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ListRepository extends JpaRepository<TodoLists, Long> {
 
-    Optional<TodoLists> findByName(String name);
+	Optional<TodoLists> findByName(String name);
 
-  Optional<TodoLists> findByIdAndNameNot(Long id, String user);
+	Optional<TodoLists> findByIdAndNameNot(Long id, String user);
 }

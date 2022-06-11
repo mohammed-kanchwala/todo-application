@@ -16,18 +16,20 @@ import java.util.stream.Collectors;
 @Component("userSecurity")
 public class UserSecurity {
 
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	UserRepository userRepository;
 
-    public boolean hasListAccess(Authentication authentication, Long listId) {
-        Optional<User> user = userRepository.findByEmail(authentication.getName());
-        if (user.isPresent()) {
-            Set<TodoLists> todoLists = user.get().getTodoLists();
-            todoLists.removeIf(l -> l.getName().equalsIgnoreCase(ApplicationConstants.USER_ROLE));
-            List<Long> list = todoLists.stream().map(TodoLists::getId).collect(Collectors.toList());
-            return list.contains(listId);
-        }
-        return false;
-    }
+	public boolean hasListAccess(Authentication authentication, Long listId) {
+		Optional<User> user = userRepository.findByEmail(authentication.getName());
+		if (user.isPresent()) {
+			Set<TodoLists> todoLists = user.get().getTodoLists();
+			todoLists.removeIf(l -> l.getName()
+							.equalsIgnoreCase(ApplicationConstants.USER_ROLE));
+			List<Long> list = todoLists.stream().map(TodoLists::getId)
+							.collect(Collectors.toList());
+			return list.contains(listId);
+		}
+		return false;
+	}
 }
 

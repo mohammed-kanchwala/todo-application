@@ -13,17 +13,20 @@ import java.util.Optional;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(email);
-        if (!user.isPresent()) {
-            throw new UsernameNotFoundException("User not found with username: " + email);
-        }
-        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(),
-                new ArrayList<>());
-    }
+	@Override
+	public UserDetails loadUserByUsername(String email)
+					throws UsernameNotFoundException {
+		Optional<User> user = userRepository.findByEmail(email);
+		if (!user.isPresent()) {
+			throw new UsernameNotFoundException(
+							"User not found with username: " + email);
+		}
+		return new org.springframework.security.core.userdetails.User(
+						user.get().getEmail(), user.get().getPassword(),
+						new ArrayList<>());
+	}
 
 }

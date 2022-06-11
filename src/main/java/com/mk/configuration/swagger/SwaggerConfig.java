@@ -16,21 +16,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    @Value("${swagger.enable}")
-    private boolean enableSwagger;
+	@Value("${swagger.enable}")
+	private boolean enableSwagger;
 
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2).select()
-          .apis(RequestHandlerSelectors.any())
-          .paths(PathSelectors.any())
-          .build();
-    }
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select()
+						.apis(RequestHandlerSelectors.any())
+						.paths(PathSelectors.any())
+						.build();
+	}
 
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title(SwaggerConstants.SWAGGER_API_TITLE)
-          .description(SwaggerConstants.API_DETAILS)
-          .version(SwaggerConstants.SWAGGER_VERSION)
-          .build();
-    }
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder().title(SwaggerConstants.SWAGGER_API_TITLE)
+						.description(SwaggerConstants.API_DETAILS)
+						.version(SwaggerConstants.SWAGGER_VERSION)
+						.build();
+	}
 }

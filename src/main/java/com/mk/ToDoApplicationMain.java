@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ToDoApplicationMain {
-    public static void main(String[] args) {
-        SpringApplication.run(ToDoApplicationMain.class);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(ToDoApplicationMain.class);
+	}
 }
