@@ -109,8 +109,6 @@
                 <configuration>
                     <excludes>
                         <exclude>com/mk/ToDoApplicationMain.*</exclude>
-                        <exclude>com/mk/model/**.*</exclude>
-                        <exclude>com/mk/constants/**.*</exclude>
                     </excludes>
                 </configuration>
                 <executions>

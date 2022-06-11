@@ -11,7 +11,6 @@ import java.util.Set;
 @Table(name = "lists")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class TodoLists {
 

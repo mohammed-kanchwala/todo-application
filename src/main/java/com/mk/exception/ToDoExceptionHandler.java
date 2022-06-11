@@ -43,13 +43,6 @@ public class ToDoExceptionHandler {
     log.error("ApiException thrown: ", ex);
     return ApiResponse.builder().error(ErrorInfo.builder().code(ex.getErrorCode()).message(ex.getErrorMessage()).build()).build();
   }
-//
-//  @ExceptionHandler({IllegalArgumentException.class, BindException.class, ConstraintViolationException.class, MethodArgumentNotValidException.class, IllegalStateException.class})
-//  @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-//  public Object handleIllegalArgumentException(ServiceException ex) {
-//    log.error("ApiException thrown: ", ex);
-//    return ApiResponse.builder().error(ErrorInfo.builder().code(ex.getErrorCode()).message(ex.getErrorMessage()).build()).build();
-//  }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)

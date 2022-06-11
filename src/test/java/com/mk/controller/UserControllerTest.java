@@ -74,6 +74,23 @@ class UserControllerTest {
 
   @Test
   @Order(4)
+  @DisplayName("User Registration With Same Email Id")
+  void registerUser_WithSameId() {
+    URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.REGISTER)).build().toUri();
+
+    UserDto userDto = RequestUtil.getRegisterUserDto("test@test.com",
+            "First", "Last");
+    HttpEntity<UserDto> request = new HttpEntity<>(userDto);
+    ResponseEntity<ApiResponse> response = restTemplate.exchange(uri, HttpMethod.POST, request, ApiResponse.class);
+
+    assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertEquals(HttpStatus.BAD_REQUEST.name(),
+            response.getBody().getError().getCode());
+  }
+
+  @Test
+  @Order(5)
   @DisplayName("User Authentication Test With Wrong Input")
   void authenticateUser_WithWrongInput() {
     URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.AUTHENTICATE)).build().toUri();
@@ -87,7 +104,7 @@ class UserControllerTest {
   }
 
   @Test
-  @Order(5)
+  @Order(6)
   @DisplayName("User Authentication Test With Invalid Password")
   void authenticateUser_WithInvalidPassword() {
     URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.AUTHENTICATE)).build().toUri();
@@ -104,7 +121,7 @@ class UserControllerTest {
   }
 
   @Test
-  @Order(6)
+  @Order(7)
   @DisplayName("User Authentication Test")
   void authenticateUser() {
     URI uri = UriComponentsBuilder.fromHttpUrl(TestUtility.createUserURL(port, UrlConstants.AUTHENTICATE)).build().toUri();

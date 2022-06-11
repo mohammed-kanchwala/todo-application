@@ -19,18 +19,6 @@ public class UserSecurity {
     @Autowired
     UserRepository userRepository;
 
-    public boolean hasListAccess(Authentication authentication, String listName) {
-        Optional<User> user = userRepository.findByEmail(authentication.getName());
-        if (user.isPresent()) {
-            Set<TodoLists> todoLists = null;
-            todoLists = user.get().getTodoLists();
-            List<String> list = todoLists.stream().map(TodoLists::getName).collect(Collectors.toList());
-            list.removeIf(s -> s.equalsIgnoreCase(ApplicationConstants.USER_ROLE));
-            return list.contains(listName);
-        }
-        return false;
-    }
-
     public boolean hasListAccess(Authentication authentication, Long listId) {
         Optional<User> user = userRepository.findByEmail(authentication.getName());
         if (user.isPresent()) {

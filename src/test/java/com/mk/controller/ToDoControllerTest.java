@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.*;
@@ -25,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("rawtypes")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ToDoControllerTest extends UserControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ToDoControllerTest {
 
   @Autowired
   private TestRestTemplate restTemplate;
@@ -49,7 +51,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(7)
+  @Order(2)
   @DisplayName("Test Home Page")
   void homePage_WithRegisterAndLogin() {
     UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(TestUtility.createToDoURL(port, "/"));
@@ -62,7 +64,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(8)
+  @Order(3)
   @DisplayName("Get All TodoLists Empty Response")
   void getList() {
     URI uri = UriComponentsBuilder.fromHttpUrl(
@@ -83,7 +85,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(9)
+  @Order(4)
   @DisplayName("Create Todo List")
   void createList() {
     String url = TestUtility.createToDoURL(port,
@@ -112,7 +114,7 @@ class ToDoControllerTest extends UserControllerTest {
 
 
   @Test
-  @Order(10)
+  @Order(5)
   @DisplayName("Get All Todo List Including Newly Created")
   void getList_AfterCreation() {
     URI uri = UriComponentsBuilder.fromHttpUrl(
@@ -141,7 +143,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(11)
+  @Order(6)
   @DisplayName("Update List Name")
   void updateList() {
     String url = TestUtility.createToDoURL(port,
@@ -172,7 +174,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(12)
+  @Order(7)
   @DisplayName("Update List Name with Invalid Id")
   void updateList_WithInvalidId() {
     String url = TestUtility.createToDoURL(port,
@@ -202,7 +204,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(13)
+  @Order(8)
   @DisplayName("Get All the Tasks for an Empty List")
   void getAllTask() {
     String url = TestUtility.createToDoURL(port,
@@ -229,7 +231,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(14)
+  @Order(9)
   @DisplayName("Add a new Task And Verify Updated List")
   void addTask() {
     String url = TestUtility.createToDoURL(port,
@@ -263,7 +265,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(15)
+  @Order(10)
   @DisplayName("Update Task with Valid Id")
   void updateTask() {
     ResponseEntity<ApiResponse> response = updateTaskTest(listId, taskId,
@@ -284,7 +286,7 @@ class ToDoControllerTest extends UserControllerTest {
 
 
   @Test
-  @Order(16)
+  @Order(11)
   @DisplayName("Update Task with InValid Task Id")
   void updateTask_WithInvalidTaskId() {
     ResponseEntity<ApiResponse> response = updateTaskTest(listId, 0L,
@@ -301,7 +303,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(17)
+  @Order(12)
   @DisplayName("Update Task with InValid List Id")
   void updateTask_WithInvalidListId() {
     ResponseEntity<ApiResponse> response = updateTaskTest(0L, taskId,
@@ -339,7 +341,7 @@ class ToDoControllerTest extends UserControllerTest {
 
 
   @Test
-  @Order(18)
+  @Order(13)
   @DisplayName("Delete Task")
   void deleteTask() {
     String url = TestUtility.createToDoURL(port,
@@ -371,7 +373,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(19)
+  @Order(14)
   @DisplayName("Delete Todo List")
   void deleteList() {
     String url = TestUtility.createToDoURL(port,
@@ -399,7 +401,7 @@ class ToDoControllerTest extends UserControllerTest {
   }
 
   @Test
-  @Order(20)
+  @Order(15)
   @DisplayName("Delete TodoLists Failure")
   void afterDeleteTest() {
     String url = TestUtility.createToDoURL(port,
